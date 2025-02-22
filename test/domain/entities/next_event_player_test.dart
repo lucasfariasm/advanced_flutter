@@ -19,7 +19,9 @@ class NextEventPlayer {
 
   String getInitials() {
     final names = name.split(' ');
-    return '${names[0][0]}${names[1][0]}';
+    final firstChar = names.first[0];
+    final lastChar = names.last[0];
+    return '$firstChar$lastChar';
   }
 }
 
@@ -31,5 +33,12 @@ void main() {
       isConfirmed: true,
     );
     expect(player.getInitials(), 'LF');
+
+    final player2 = NextEventPlayer(
+      id: '',
+      name: 'Lucas Farias de Moura',
+      isConfirmed: true,
+    );
+    expect(player2.getInitials(), 'LM');
   });
 }
