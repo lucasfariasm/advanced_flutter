@@ -11,6 +11,10 @@ import 'package:http/http.dart';
 
 import '../../helpers/fakes.dart';
 
+enum DomainError {
+  unexpected,
+}
+
 class LoadNextEventHttpRepository implements LoadNextEventRepository {
   final Client httpClient;
   final String url;
@@ -28,6 +32,9 @@ class LoadNextEventHttpRepository implements LoadNextEventRepository {
       'accept': 'application/json'
     };
     final response = await httpClient.get(uri, headers: headers);
+    if (response.statusCode == 400) {
+      throw DomainError.unexpected;
+    }
     final event = jsonDecode(response.body);
     return NextEvent(
       groupName: event['groupName'],
@@ -176,5 +183,11 @@ void main() {
     expect(event.players[1].photo, 'photo 2');
     expect(event.players[1].confirmationDate, DateTime(2025, 2, 25, 11, 0));
     expect(event.players[1].isConfirmed, false);
+  });
+
+  test('should throw UnexpectedError on 400', () async {
+    httpClient.statusCode = 400;
+    final future = sut.loadNextEvent(groupId: groupId);
+    expect(future, throwsA(DomainError.unexpected));
   });
 }
