@@ -41,6 +41,7 @@ class HttpGetClientSpy implements HttpGetClient {
   int callsCount = 0;
   Map<String, String>? params;
   dynamic response;
+  Error? error;
 
   @override
   Future<dynamic> get(
@@ -48,6 +49,7 @@ class HttpGetClientSpy implements HttpGetClient {
     this.url = url;
     this.params = params;
     callsCount++;
+    if (error != null) throw error!;
     return response;
   }
 }
@@ -101,5 +103,12 @@ void main() {
     expect(event.players[1].photo, 'photo 2');
     expect(event.players[1].confirmationDate, DateTime(2025, 2, 25, 11, 0));
     expect(event.players[1].isConfirmed, false);
+  });
+
+  test('should rethrow on error', () async {
+    final error = Error();
+    httpClient.error = error;
+    final future = sut.loadNextEvent(groupId: groupId);
+    expect(future, throwsA(error));
   });
 }
