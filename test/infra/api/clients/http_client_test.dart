@@ -1,3 +1,4 @@
+import 'package:dartx/dartx.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 
@@ -13,30 +14,32 @@ class HttpClient {
     required String url,
     Map<String, String>? headers,
     Map<String, String?>? params,
-    Map<String, String>? queryStrings,
+    Map<String, String>? queryString,
   }) async {
     final allHeaders = (headers ?? {})
       ..addAll(
         {'content-type': 'application/json', 'accept': 'application/json'},
       );
-    final uri = _buildUri(url: url, params: params, queryStrings: queryStrings);
+    final uri = _buildUri(url: url, params: params, queryString: queryString);
     await client.get(uri, headers: allHeaders);
   }
 
   Uri _buildUri({
     required String url,
     Map<String, String?>? params,
-    Map<String, String>? queryStrings,
+    Map<String, String>? queryString,
   }) {
-    params?.forEach(
-      (key, value) => url = url.replaceFirst(':$key', value ?? ''),
-    );
-    if (url.endsWith('/')) url = url.substring(0, url.length - 1);
-    if (queryStrings != null) {
-      url += '?';
-      queryStrings.forEach((key, value) => url += '$key=$value&');
-      url = url.substring(0, url.length - 1);
-    }
+    url = params?.keys
+            .fold(
+                url,
+                (result, key) =>
+                    result.replaceFirst(':$key', params[key] ?? ''))
+            .removeSuffix('/') ??
+        url;
+    url = queryString?.keys
+            .fold('$url?', (result, key) => '$result$key=${queryString[key]}&')
+            .removeSuffix('&') ??
+        url;
     return Uri.parse(url);
   }
 }
@@ -97,7 +100,7 @@ void main() {
     });
 
     test('should request with correct queryStrings', () async {
-      await sut.get(url: url, queryStrings: {'q1': 'v1', 'q2': 'v2'});
+      await sut.get(url: url, queryString: {'q1': 'v1', 'q2': 'v2'});
       expect(client.url, '$url?q1=v1&q2=v2');
     });
 
@@ -105,7 +108,7 @@ void main() {
       url = 'http://anyurl.com/:p3/:p4';
       await sut.get(
         url: url,
-        queryStrings: {'q1': 'v1', 'q2': 'v2'},
+        queryString: {'q1': 'v1', 'q2': 'v2'},
         params: {'p3': 'v3', 'p4': 'v4'},
       );
       expect(client.url, 'http://anyurl.com/v3/v4?q1=v1&q2=v2');
