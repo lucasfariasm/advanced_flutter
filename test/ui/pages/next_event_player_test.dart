@@ -8,11 +8,13 @@ final class NextEventViewModel {
   final List<NextEventPlayerViewModel> goalkeepers;
   final List<NextEventPlayerViewModel> players;
   final List<NextEventPlayerViewModel> out;
+  final List<NextEventPlayerViewModel> doubt;
 
   const NextEventViewModel({
     this.goalkeepers = const [],
     this.players = const [],
     this.out = const [],
+    this.doubt = const [],
   });
 }
 
@@ -73,6 +75,11 @@ class _NextEventPageState extends State<NextEventPage> {
                   title: 'FORA',
                   items: viewModel.out,
                 ),
+              if (viewModel.doubt.isNotEmpty)
+                ListSection(
+                  title: 'DÚVIDA',
+                  items: viewModel.doubt,
+                ),
             ],
           );
         },
@@ -126,11 +133,13 @@ final class NextEventPresenterSpy implements NextEventPresenter {
     List<NextEventPlayerViewModel> goalkeepers = const [],
     List<NextEventPlayerViewModel> players = const [],
     List<NextEventPlayerViewModel> out = const [],
+    List<NextEventPlayerViewModel> doubt = const [],
   }) {
     nextEventSubject.add(NextEventViewModel(
       goalkeepers: goalkeepers,
       players: players,
       out: out,
+      doubt: doubt,
     ));
   }
 
@@ -227,6 +236,21 @@ void main() {
     ]);
     await tester.pump();
     expect(find.text("FORA"), findsOneWidget);
+    expect(find.text("3"), findsOneWidget);
+    expect(find.text("Rodrigo"), findsOneWidget);
+    expect(find.text("Rafael"), findsOneWidget);
+    expect(find.text("Pedro"), findsOneWidget);
+  });
+
+  testWidgets('should present doubt section', (tester) async {
+    await tester.pumpWidget(sut);
+    presenter.emitNextEventWith(doubt: const [
+      NextEventPlayerViewModel(name: "Rodrigo"),
+      NextEventPlayerViewModel(name: "Rafael"),
+      NextEventPlayerViewModel(name: "Pedro"),
+    ]);
+    await tester.pump();
+    expect(find.text("DÚVIDA"), findsOneWidget);
     expect(find.text("3"), findsOneWidget);
     expect(find.text("Rodrigo"), findsOneWidget);
     expect(find.text("Rafael"), findsOneWidget);
