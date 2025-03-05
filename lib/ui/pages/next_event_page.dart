@@ -22,8 +22,17 @@ class _NextEventPageState extends State<NextEventPage> {
   @override
   void initState() {
     widget.presenter.loadNextEvent(groupId: widget.groupId);
+    widget.presenter.isBusyStream
+        .listen((isBusy) => isBusy ? showLoading() : hideLoading());
     super.initState();
   }
+
+  void showLoading() => showDialog(
+        context: context,
+        builder: (context) => const CircularProgressIndicator(),
+      );
+
+  void hideLoading() => Navigator.of(context).maybePop();
 
   Widget buildErrorLayout() => Column(
         children: [
@@ -41,7 +50,7 @@ class _NextEventPageState extends State<NextEventPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder<NextEventViewModel>(
-        stream: widget.presenter.nextEventStram,
+        stream: widget.presenter.nextEventStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.active) {
             return const CircularProgressIndicator();
