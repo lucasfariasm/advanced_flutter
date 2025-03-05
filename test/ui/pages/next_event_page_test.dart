@@ -1,4 +1,5 @@
 import 'package:advanced_flutter/presentation/presenters/next_event_presenter.dart';
+import 'package:advanced_flutter/ui/components/player_position.dart';
 import 'package:advanced_flutter/ui/pages/next_event_page.dart';
 
 import 'package:flutter/material.dart';
@@ -100,6 +101,7 @@ void main() {
     expect(find.text("Rodrigo"), findsOneWidget);
     expect(find.text("Rafael"), findsOneWidget);
     expect(find.text("Pedro"), findsOneWidget);
+    expect(find.byType(PlayerPosition), findsExactly(3));
   });
 
   testWidgets('should present players section', (tester) async {
@@ -115,6 +117,7 @@ void main() {
     expect(find.text("Rodrigo"), findsOneWidget);
     expect(find.text("Rafael"), findsOneWidget);
     expect(find.text("Pedro"), findsOneWidget);
+    expect(find.byType(PlayerPosition), findsExactly(3));
   });
 
   testWidgets('should present out section', (tester) async {
@@ -130,6 +133,7 @@ void main() {
     expect(find.text("Rodrigo"), findsOneWidget);
     expect(find.text("Rafael"), findsOneWidget);
     expect(find.text("Pedro"), findsOneWidget);
+    expect(find.byType(PlayerPosition), findsExactly(3));
   });
 
   testWidgets('should present doubt section', (tester) async {
@@ -145,6 +149,7 @@ void main() {
     expect(find.text("Rodrigo"), findsOneWidget);
     expect(find.text("Rafael"), findsOneWidget);
     expect(find.text("Pedro"), findsOneWidget);
+    expect(find.byType(PlayerPosition), findsExactly(3));
   });
 
   testWidgets('should hide all sections', (tester) async {
@@ -155,5 +160,6 @@ void main() {
     expect(find.text("DENTRO - JOGADORES"), findsNothing);
     expect(find.text("FORA"), findsNothing);
     expect(find.text("DÚVIDA"), findsNothing);
+    expect(find.byType(PlayerPosition), findsNothing);
   });
 }
