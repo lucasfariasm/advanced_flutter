@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 
 class PlayerPhoto extends StatelessWidget {
   final String initials;
@@ -13,8 +14,9 @@ class PlayerPhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CircleAvatar(
-      child: Text("LF"),
+    return CircleAvatar(
+      foregroundImage: photo != null ? NetworkImage(photo!) : null,
+      child: photo == null ? Text(initials) : null,
     );
   }
 }
@@ -29,6 +31,20 @@ void main() {
         ),
       ),
     );
-    expect(find.text("LF"), findsOneWidget);
+    expect(find.text("LU"), findsOneWidget);
+  });
+
+  testWidgets('should hide initials when there is photo', (tester) async {
+    mockNetworkImagesFor(() async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: PlayerPhoto(
+            initials: 'LU',
+            photo: "http://any-url.com",
+          ),
+        ),
+      );
+      expect(find.text("LU"), findsNothing);
+    });
   });
 }
