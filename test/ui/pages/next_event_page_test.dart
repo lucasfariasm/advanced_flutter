@@ -236,6 +236,9 @@ void main() {
 
   testWidgets('should load event data on pull to refresh', (tester) async {
     await tester.pumpWidget(sut);
+    expect(presenter.loadCallsCount, 1);
+    expect(presenter.groupId, groupId);
+    expect(presenter.isReload, false);
     presenter.emitNextEvent();
     await tester.pump();
     await tester.flingFrom(
@@ -244,7 +247,8 @@ void main() {
       800,
     );
     await tester.pumpAndSettle();
-    expect(presenter.reloadCallsCount, 1);
+    expect(presenter.loadCallsCount, 2);
     expect(presenter.groupId, groupId);
+    expect(presenter.isReload, true);
   });
 }
