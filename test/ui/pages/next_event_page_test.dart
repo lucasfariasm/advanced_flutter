@@ -14,6 +14,7 @@ final class NextEventPresenterSpy implements NextEventPresenter {
   int loadCallsCount = 0;
   int reloadCallsCount = 0;
   String? groupId;
+  bool? isReload;
   var nextEventSubject = BehaviorSubject<NextEventViewModel>();
   var isBusySubject = BehaviorSubject<bool>();
 
@@ -50,9 +51,10 @@ final class NextEventPresenterSpy implements NextEventPresenter {
   }
 
   @override
-  void loadNextEvent({required String groupId}) {
+  void loadNextEvent({required String groupId, bool isReload = false}) {
     loadCallsCount++;
     this.groupId = groupId;
+    this.isReload = isReload;
   }
 
   @override
@@ -82,6 +84,7 @@ void main() {
     await tester.pumpWidget(sut);
     expect(presenter.loadCallsCount, 1);
     expect(presenter.groupId, groupId);
+    expect(presenter.isReload, false);
   });
 
   testWidgets('should present spinner while data is loading', (tester) async {
