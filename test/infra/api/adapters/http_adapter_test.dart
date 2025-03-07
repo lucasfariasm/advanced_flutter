@@ -1,6 +1,5 @@
 import 'package:advanced_flutter/domain/entities/errors.dart';
 import 'package:advanced_flutter/infra/api/adapters/http_adapter.dart';
-import 'package:advanced_flutter/infra/types/json.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
@@ -119,7 +118,7 @@ void main() {
     });
 
     test('should return a Map', () async {
-      final data = await sut.get<Json>(url: url);
+      final data = await sut.get(url: url);
       expect(data?['key1'], 'value1');
       expect(data?['key2'], 'value2');
     });
@@ -132,7 +131,7 @@ void main() {
             "key": "value2"
         }]
     ''';
-      final data = await sut.get<JsonArr>(url: url);
+      final data = await sut.get(url: url);
       expect(data?[0]['key'], 'value1');
       expect(data?[1]['key'], 'value2');
     });
@@ -151,7 +150,7 @@ void main() {
         }
 
     ''';
-      final data = await sut.get<Json>(url: url);
+      final data = await sut.get(url: url);
       expect(data?['key1'], 'value1');
       expect(data?['key2'][0]['key'], 'value1');
       expect(data?['key2'][1]['key'], 'value2');
