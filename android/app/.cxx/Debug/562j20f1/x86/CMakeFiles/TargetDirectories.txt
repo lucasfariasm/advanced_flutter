@@ -1,0 +1,2 @@
+/Users/lucasfarmou/dev/flutter/courses/manguinho/advanced_flutter/android/app/.cxx/Debug/562j20f1/x86/CMakeFiles/edit_cache.dir
+/Users/lucasfarmou/dev/flutter/courses/manguinho/advanced_flutter/android/app/.cxx/Debug/562j20f1/x86/CMakeFiles/rebuild_cache.dir
